@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+  <title>DLS-DHCP Tool</title>
+
+  <!-- Bootstrap CSS Files -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+
+ 
+  <script>
+	
+	 function generatestring(inputText){
+		 /*Überprüfe mit RegEx die IP Adresse mit ipformat und der if*/
+		 var ipformat = /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
+		 var ip = inputText.value;
+		 var teil1 = "option vendor-encapsulated-options 01:07:53:69:65:6D:65:6E:73:03:17:73:64:6C:70:3A:2F:2F:";
+		 var teil3 = ":3A:31:38:34:34:33;";
+		 var huaweiteil3 = " 3A 31 38 34 34 33";
+		 var huaweiteil1 = "option 43 hex 01 07 53 69 65 6D 65 6E 73 03 17 73 64 6C 70 3A 2F 2F ";
+		 
+		 if(inputText.value.match(ipformat)) /*Wenn das IP Format des Inputs korrekt ist...*/
+			{
+			document.getElementById('dlsip').focus();
+			var arr = [];
+			for (var i = 0; i < ip.length; i++) {
+				  arr[i] = (ip.charCodeAt(i).toString(16)).slice(-4);
+				} /* mache aus jedem zeichen des string ip ein array in hex format*/
+			ip = arr.join(":"); /* Mache aus dem Array ein String und weise es der Variable ip zu. Seperator ist ":"*/
+			ip = ip.toUpperCase();
+			document.getElementById("output1").innerHTML = "<h4>Der String für den DHCPD Linux-Scope lautet:</h4><br>" + teil1+ip+teil3;
+			document.getElementById("output2").innerHTML = 
+			"<br><h4>Der String für den DHCPD Linux-Class lautet: </h4><br>class \"OptiIpPhone\" { <br>" 
+			+teil1+ip+teil3+
+			'<br>match if substring (option vendor-class-identifier, 0, 11) = "OptiIpPhone";<br>}'
+			var huawei = huaweiteil1+ip+huaweiteil3;
+			for (h = 0; h < huawei.length; h++) {
+					huawei = huawei.replace(":"," ");
+				}
+			document.getElementById("output3").innerHTML = "<h4>Der String für den HUAWEI Komponenten lautet:</h4><br>" + huawei;
+			return true;
+			}
+		 else
+			 {
+				 alert("Sie haben eine ungültige IP Adresse eingegeben!");
+				 document.getElementById('dlsip').focus();
+				 return false;
+			 }		
+	 };
+  </script>
+</head>
+
+<body>
+
+  <!-- ======= Header ======= -->
+  <header id="header">
+    <div class="container d-flex align-items-center justify-content-between">
+
+      <h1><a href="https://techniker-meyer.de/index.html">TECHNIKER Meyer</a></h1>
+      <a href="https://techniker-meyer.de/index.html#contact" class="get-started-btn scrollto">Kontakt</a>
+    </div>
+  </header><!-- End Header -->
+
+  <main id="main">
+      <div class="container">
+        <div>
+			<div>
+			   <h2>OpenScape Deployment Service</h2>
+			  <p>DLS-DHCP Tool</p>
+			</div>
+			<div>
+				<p>Um einen Kunden Linux-basierten DHCP-Server für die Nutzung von Unify OpenStage Telefonen zu konfigurieren, müssen entweder LINUX Classes oder LINUX Scopes konfiguriert werden.</p>
+				<p>Bitte geben Sie die DLS IP Adresse ein und klicken auf den Knopf "Generate":</p>
+			</div>
+			<div class="row">
+				<div class="col-sm-3">
+					<input class="form-control text-center" id="dlsip" type="text" placeholder="IP Adresse" size="10">
+				</div>
+				<div class="col-sm2">
+					<button class="btn btn-danger text-center" id="btn1" type="submit" onclick="generatestring(document.getElementById('dlsip'))">Generate</button>
+				</div>
+				<div class="col">
+					<button class="btn btn-success text-center" id="btn2" type="submit" onclick="location.reload();">Reset</button>
+				</div>
+			</div>
+			<div>
+				<br>
+				<div><p id="output1"></p></div>
+				<div><p id="output2"></p></div>
+				<div><p id="output3"></p></div>
+			</div>
+        </div>		
+      </div>
+    
+  </main><!-- End #main -->
+
+ <!-- ======= Footer ======= -->
+  <footer id="footer">
+    <div class="container">
+      <div>
+        &copy; Copyright <strong><span>TECHNIKER</span></strong> MEYER Alle Rechte vorbehalten
+      </div>
+      <div>
+        Maintained by <a href="https://www.techniker-meyer.de/"><span>TECHNIKER</span> MEYER</a>
+      </div>
+    </div>
+  </footer><!-- End Footer -->
+
+
+
+  <!-- Java Script -->
+  
+	<script> /* Enter im Inputfeld soll Klick des Button auslösen */
+	var inputenter = document.getElementById("dlsip");
+	inputenter.addEventListener("keyup", function(event) {
+		if (event.keyCode === 13) {
+			event.preventDefault();
+			document.getElementById("btn1").click();
+			}
+		});
+   </script>
+</body>
+
+</html>
