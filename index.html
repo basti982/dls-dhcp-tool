@@ -14,14 +14,17 @@
  
   <script>
 	
-	 function generatestring(inputText){
+	 ffunction generatestring(inputText){
 		 /*Überprüfe mit RegEx die IP Adresse mit ipformat und der if*/
 		 var ipformat = /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
 		 var ip = inputText.value;
-		 var teil1 = "option vendor-encapsulated-options 01:07:53:69:65:6D:65:6E:73:03:17:73:64:6C:70:3A:2F:2F:";
+		 var plaintextstring = "sdlp://" + ip + ":18443";
+		 var laenge = plaintextstring.length;
+		 var hexlaenge = laenge.toString(16);
+		 var teil1 = "option vendor-encapsulated-options 01:07:53:69:65:6D:65:6E:73:03:" + hexlaenge + ":73:64:6C:70:3A:2F:2F:";
 		 var teil3 = ":3A:31:38:34:34:33;";
 		 var huaweiteil3 = " 3A 31 38 34 34 33";
-		 var huaweiteil1 = "option 43 hex 01 07 53 69 65 6D 65 6E 73 03 17 73 64 6C 70 3A 2F 2F ";
+		 var huaweiteil1 = "option 43 hex 01 07 53 69 65 6D 65 6E 73 03 " + hexlaenge + " 73 64 6C 70 3A 2F 2F ";
 		 
 		 if(inputText.value.match(ipformat)) /*Wenn das IP Format des Inputs korrekt ist...*/
 			{
@@ -42,6 +45,7 @@
 					huawei = huawei.replace(":"," ");
 				}
 			document.getElementById("output3").innerHTML = "<h4>Der String für den HUAWEI Komponenten lautet:</h4><br>" + huawei;
+			document.getElementById("output4").innerHTML = "<h4>Der Plaintext-String für die Option 43 lautet:</h4><br>" + "0107Siemens03"+ hexlaenge + plaintextstring;
 			return true;
 			}
 		 else
@@ -92,6 +96,7 @@
 				<div><p id="output1"></p></div>
 				<div><p id="output2"></p></div>
 				<div><p id="output3"></p></div>
+				<div><p id="output4"></p></div>
 			</div>
         </div>		
       </div>
